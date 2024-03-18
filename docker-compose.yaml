@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: good
+      POSTGRES_PASSWORD: good
+      POSTGRES_DB: good
+  mebel:
+    build: 
+      context: ./app1
+    ports:
+      - 8000:8000
+    depends_on:
+     - postgres
+    volumes:
+     - static_volume:/appdir/static
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./conf/nginx.config:/etc/nginx/nginx.conf
+      - static_volume:/static
+    ports:
+      - "80:80"
+    depends_on:
+      - mebel
+volumes:
+  static_volume:
