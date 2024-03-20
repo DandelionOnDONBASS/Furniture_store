@@ -1,6 +1,6 @@
 # Virtual environment
-*/venv
-*.venv
+venv/
+.venv
 
 # Django environ
 *.env
@@ -13,4 +13,4 @@
 *.db
 *.sqlite3
 
-*/__pycache__
+__pycache__

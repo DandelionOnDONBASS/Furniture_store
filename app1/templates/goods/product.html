@@ -50,5 +50,36 @@
             Добавить в корзину</a>
         </div>
     </div>
+
+    <div class="container mt-5">
+        {% if user.is_authenticated %}
+        <h2>Добавить комментарий</h2>
+        <form method="post" action="{% url "goods:comment" product.id %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="comment-text" class="form-label">Текст комментария</label>
+                <textarea class="form-control" name="comment-text" id="comment-text" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
+        {% endif %}
+        <div id="commentsContainer">
+            {% if comments %}
+                <h2>Комментарии</h2>
+                {% for comment in comments %}
+                    <div class="card mb-4 custom-shadow comment">
+                        <div class="card-body">
+                            <img src="{% if comment.author.image %}{{ comment.author.image.url }}{% else %}{% static 'deps/images/baseavatar.jpg' %}{% endif %}" class="rounded-circle" style="width: 50px;" alt="Аватар">
+                            <h5 class="card-title">{{ comment.author.username }}</h5>
+                            <p class="card-text">{{ comment.text }}</p>
+                            <p class="card-text"><small class="text-muted">{{ comment.created|date:"d.m.Y H:i:s" }}</small></p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <button class="btn btn-dark add-to-cart" id="loadMoreBtn">Загрузить больше комментариев</button>
+    </div>
 </div>
+<script src="{% static "deps/js/product.js" %}"></script>
 {% endblock  %}

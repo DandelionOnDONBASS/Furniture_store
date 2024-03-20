@@ -1,8 +1,9 @@
 from django.core.paginator import Paginator
-from django.shortcuts import get_list_or_404, get_object_or_404, render
-
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
 from goods.models import Products
 from goods.utils import q_search
+from users.models import Comment
 
 
 def catalog(request, category_slug=None):
@@ -38,7 +39,17 @@ def catalog(request, category_slug=None):
 
 def product(request, product_slug):
     product = Products.objects.get(slug=product_slug)
-
-    context = {"product": product}
+    comments = Comment.objects.filter(product=product).order_by('-created')
+    context = {"product": product,
+               "comments": comments}
 
     return render(request, "goods/product.html", context=context)
+
+
+@login_required
+def comment(request, product_id):
+    product = get_object_or_404(Products, id=product_id)
+    Comment.objects.create(author=request.user, product=product, text=request.POST.get('comment-text'))
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+    

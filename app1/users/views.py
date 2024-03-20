@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.db.models import Prefetch
+from requests import request
 from orders.models import Order, OrderItem
 from carts.models import Cart
 from .forms import UserLoginForm, UserRegistrationForm, UserChangeForm
@@ -26,7 +27,7 @@ def login(request):
                     Cart.objects.filter(session_key=session_key).update(user=user)
 
                 redirect_page = request.POST.get("next", None)
-                if redirect_page and redirect_page != reverse("user:logout"):
+                if redirect_page:
                     return HttpResponseRedirect(request.POST.get("next"))
                 return HttpResponseRedirect(reverse("main:index"))
 
@@ -102,6 +103,10 @@ def logout(request):
 
 def users_cart(request):
     return render(request, "users/users_cart.html")
+
+
+
+
 
 
 

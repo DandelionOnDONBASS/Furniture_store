@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User
+from .models import User, Comment
 from orders.admin import OrderInline
 
 
@@ -7,4 +7,10 @@ from orders.admin import OrderInline
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'email', 'first_name', 'last_name', 'is_staff']
     inlines = [OrderInline]
-# Register your models here.
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['author', 'product', 'text', 'created']
+
+
